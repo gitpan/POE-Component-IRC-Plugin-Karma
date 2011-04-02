@@ -1,0 +1,41 @@
+This file contains message digests of all files listed in MANIFEST,
+signed via the Module::Signature module, version 0.66.
+
+To verify the content in this distribution, first make sure you have
+Module::Signature installed, then type:
+
+    % cpansign -v
+
+It will check each file's integrity, as well as the signature's
+validity.  If "==> Signature verified OK! <==" is not displayed,
+the distribution may already have been compromised, and you should
+not run its Makefile.PL or Build.PL.
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+SHA1 6c30a9ca72ac09ed93a107d00efde7ee5441e27e Build.PL
+SHA1 5784553271c5c51179cbcd34fdbb346878a5522a Changes
+SHA1 f7229c4d69aace7b238ecf706dcd9ee588bcd6d3 CommitLog
+SHA1 5e205850c56eba6f44fc7f3ac0c69324fa466ca7 INSTALL
+SHA1 263360e99a0de4d587fedefe1a919dcf61af1d10 LICENSE
+SHA1 c662479fccfe4c30094f1d88959ca3ee14578d2d MANIFEST
+SHA1 9dfc07c5655b958e800189837f3ddd37ca050bfe MANIFEST.SKIP
+SHA1 63b029cee5115c7740502291f702c621c8d4073e META.json
+SHA1 0781c4ba7b2cc9436a6bae11450e904e01a2ebc8 META.yml
+SHA1 ade60dac4c051f3217679c52c18be9f4a53e2835 Makefile.PL
+SHA1 293ad4372afc9f06ccaafa43f6980b3669405132 README
+SHA1 25a6fd47231e788287470d0023153a3f4394e2ab dist.ini
+SHA1 bd66baf0b3fdaadc6e07939c03932ccb7ad5916f examples/bot.pl
+SHA1 aff59ce3b70f14cb46d5bacf698e284e97ca0468 lib/POE/Component/IRC/Plugin/Karma.pm
+SHA1 2db47110cdf6b794b791e93d323c8fc2d91e67f8 t/00-compile.t
+SHA1 3a87a1de4bf559c2c0efb3150d5c960fdda55d36 t/000-report-versions-tiny.t
+SHA1 4c1585d6e9aab1f25fa7c00f9882cec50f6f03d4 t/apocalypse.t
+SHA1 86921fd54bc62ac9b39b58caa63a2fbc54a9c38e t/parsing.t
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iEYEARECAAYFAk2XcVMACgkQGfr7vsGKgxxrCQCg8dhDZBoKSjY9mxqwhXbE5hjD
+DgcAoIs1+lSmYDwCtae7NKdebMZ7E0el
+=t76S
+-----END PGP SIGNATURE-----
