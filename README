@@ -3,7 +3,7 @@ NAME
     keeps track of karma
 
 VERSION
-      This document describes v0.001 of POE::Component::IRC::Plugin::Karma - released April 02, 2011 as part of POE-Component-IRC-Plugin-Karma.
+      This document describes v0.002 of POE::Component::IRC::Plugin::Karma - released April 02, 2011 as part of POE-Component-IRC-Plugin-Karma.
 
 SYNOPSIS
             # A simple bot to showcase karma capabilities
@@ -20,7 +20,7 @@ SYNOPSIS
 
             # Setup our plugins + tell the bot to connect!
             $irc->plugin_add( 'AutoJoin', POE::Component::IRC::Plugin::AutoJoin->new( Channels => [ '#test' ] ));
-            $irc->plugin_add( 'Karma', POE::Component::IRC::Plugin::Karma->new );
+            $irc->plugin_add( 'Karma', POE::Component::IRC::Plugin::Karma->new( extrastats => 1 ) );
             $irc->yield( connect => { } );
 
             POE::Kernel->run;
@@ -33,17 +33,26 @@ DESCRIPTION
     actions.
 
   IRC USAGE
-    *   <thing>++ # <comment>
+    *   thing++ # comment
 
         Increases the karma for <thing> ( with optional comment )
 
-    *   <thing>-- # <comment>
+    *   thing-- # comment
 
         Decreases the karma for <thing> ( with optional comment )
 
-    *   karma <thing>
+    *   (a thing with spaces)++ # comment
+
+        Increases the karma for <a thing with spaces> ( with optional
+        comment )
+
+    *   karma thing
 
         Replies with the karma rating for <thing>
+
+    *   karma ( a thing with spaces )
+
+        Replies with the karma rating for <a thing with spaces>
 
 ATTRIBUTES
   addressed
@@ -54,6 +63,12 @@ ATTRIBUTES
 
             # addressed = false
             <you> perl++
+
+    The default is: false
+
+  casesens
+    If this is a true value, karma checking will be done in a case-sensitive
+    way.
 
     The default is: false
 
@@ -83,9 +98,13 @@ ATTRIBUTES
   sqlite
     Set the path to the SQLite database which will hold the karma stats.
 
-    BEWARE: In the future this might be changed to a more "fancy" system!
+    From the DBD::SQLite docs: Although the database is stored in a single
+    file, the directory containing the database file must be writable by
+    SQLite because the library will create several temporary files there.
 
     The default is: karma_stats.db
+
+    BEWARE: In the future this might be changed to a more "fancy" system!
 
 SEE ALSO
     Please see those modules/websites for more information related to this

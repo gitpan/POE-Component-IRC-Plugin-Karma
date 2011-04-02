@@ -9,7 +9,7 @@
 use strict; use warnings;
 package POE::Component::IRC::Plugin::Karma;
 BEGIN {
-  $POE::Component::IRC::Plugin::Karma::VERSION = '0.001';
+  $POE::Component::IRC::Plugin::Karma::VERSION = '0.002';
 }
 BEGIN {
   $POE::Component::IRC::Plugin::Karma::AUTHORITY = 'cpan:APOCAL';
@@ -34,8 +34,21 @@ use POE::Component::IRC::Common qw( parse_user );
 # TODO do we need a botsnack thingy? bot++ bot--
 # seen in bot-basicbot-karma where a user tries to karma the bot itself and it replies with something
 
+# TODO <@Hinrik> maybe you should separate the parsing from the IRC plugin
+# <@Hinrik> so there'd be a Karma module which people could apply to any text (e.g. IRC logs)
+# <@Hinrik> and also for people like buu who use an entirely different kind of IRC plugin
+
+# TODO do we need a warn_selfkarma option so it warns the user trying to karma themselves?
+
 
 has 'addressed' => (
+	is	=> 'rw',
+	isa	=> 'Bool',
+	default	=> 0,
+);
+
+
+has 'casesens' => (
 	is	=> 'rw',
 	isa	=> 'Bool',
 	default	=> 0,
@@ -236,9 +249,16 @@ sub _karma {
 sub _get_karma {
 	my( $self, $karma ) = @_;
 
+	# case-sensitive search or not?
+	my $sql = 'SELECT mode, count(mode) AS count FROM karma WHERE karma = ?';
+	if ( ! $self->casesens ) {
+		$sql .= ' COLLATE NOCASE';
+	}
+	$sql .= ' GROUP BY mode';
+
 	# Get the score from the DB
 	my $dbh = $self->_get_dbi;
-	my $sth = $dbh->prepare_cached( 'SELECT mode, count(mode) AS count FROM karma WHERE karma = ? GROUP BY mode' ) or die $dbh->errstr;
+	my $sth = $dbh->prepare_cached( $sql ) or die $dbh->errstr;
 	$sth->execute( $karma ) or die $sth->errstr;
 	my( $up, $down ) = ( 0, 0 );
 	while ( my $row = $sth->fetchrow_arrayref ) {
@@ -288,7 +308,7 @@ sub _add_karma {
 
 	# insert it into the DB!
 	my $dbh = $self->_get_dbi;
-	my $sth = $dbh->prepare_cached( 'INSERT INTO karma ( who, "where", timestamp, karma, mode, comment, said ) VALUES ( ?, ?, ?, ?, ?, ?, ? )' );
+	my $sth = $dbh->prepare_cached( 'INSERT INTO karma ( who, "where", timestamp, karma, mode, comment, said ) VALUES ( ?, ?, ?, ?, ?, ?, ? )' ) or die $dbh->errstr;
 	$sth->execute(
 		$args{'who'},
 		$args{'where'},
@@ -297,7 +317,7 @@ sub _add_karma {
 		( $args{'op'} eq '++' ? 1 : 0 ),
 		$args{'comment'},
 		$args{'str'},
-	) or die $dbh->errstr;
+	) or die $sth->errstr;
 	$sth->finish;
 
 	return;
@@ -310,6 +330,7 @@ sub _get_dbi {
 
 	# set some SQLite tweaks
 	$dbh->do( 'PRAGMA synchronous = OFF' ) or die $dbh->errstr;
+	$dbh->do( 'PRAGMA locking_mode = EXCLUSIVE' ) or die $dbh->errstr;
 
 	return $dbh;
 }
@@ -356,7 +377,7 @@ POE::Component::IRC::Plugin::Karma - A POE::Component::IRC plugin that keeps tra
 
 =head1 VERSION
 
-  This document describes v0.001 of POE::Component::IRC::Plugin::Karma - released April 02, 2011 as part of POE-Component-IRC-Plugin-Karma.
+  This document describes v0.002 of POE::Component::IRC::Plugin::Karma - released April 02, 2011 as part of POE-Component-IRC-Plugin-Karma.
 
 =head1 SYNOPSIS
 
@@ -374,7 +395,7 @@ POE::Component::IRC::Plugin::Karma - A POE::Component::IRC plugin that keeps tra
 
 	# Setup our plugins + tell the bot to connect!
 	$irc->plugin_add( 'AutoJoin', POE::Component::IRC::Plugin::AutoJoin->new( Channels => [ '#test' ] ));
-	$irc->plugin_add( 'Karma', POE::Component::IRC::Plugin::Karma->new );
+	$irc->plugin_add( 'Karma', POE::Component::IRC::Plugin::Karma->new( extrastats => 1 ) );
 	$irc->yield( connect => { } );
 
 	POE::Kernel->run;
@@ -391,21 +412,33 @@ The bot will watch for karma in channel messages, privmsgs and ctcp actions.
 
 =item *
 
-<thing>++ # <comment>
+thing++ # comment
 
 Increases the karma for <thing> ( with optional comment )
 
 =item *
 
-<thing>-- # <comment>
+thing-- # comment
 
 Decreases the karma for <thing> ( with optional comment )
 
 =item *
 
-karma <thing>
+(a thing with spaces)++ # comment
+
+Increases the karma for <a thing with spaces> ( with optional comment )
+
+=item *
+
+karma thing
 
 Replies with the karma rating for <thing>
+
+=item *
+
+karma ( a thing with spaces )
+
+Replies with the karma rating for <a thing with spaces>
 
 =back
 
@@ -420,6 +453,12 @@ If this is a true value, the karma commands has to be sent to the bot.
 
 	# addressed = false
 	<you> perl++
+
+The default is: false
+
+=head2 casesens
+
+If this is a true value, karma checking will be done in a case-sensitive way.
 
 The default is: false
 
@@ -451,9 +490,12 @@ The default is: false
 
 Set the path to the SQLite database which will hold the karma stats.
 
-BEWARE: In the future this might be changed to a more "fancy" system!
+From the L<DBD::SQLite> docs: Although the database is stored in a single file, the directory containing the
+database file must be writable by SQLite because the library will create several temporary files there.
 
 The default is: karma_stats.db
+
+BEWARE: In the future this might be changed to a more "fancy" system!
 
 =head1 SEE ALSO
 

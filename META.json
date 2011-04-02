@@ -52,7 +52,7 @@
    "provides" : {
       "POE::Component::IRC::Plugin::Karma" : {
          "file" : "lib/POE/Component/IRC/Plugin/Karma.pm",
-         "version" : "0.001"
+         "version" : "0.002"
       }
    },
    "release_status" : "stable",
@@ -71,7 +71,7 @@
          "web" : "http://github.com/apocalypse/perl-pocoirc-karma"
       }
    },
-   "version" : "0.001",
+   "version" : "0.002",
    "x_BuiltWith" : {
       "modules" : {
          "DBD::SQLite" : "1.31",

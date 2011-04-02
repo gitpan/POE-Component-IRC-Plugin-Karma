@@ -21,7 +21,7 @@ my %module_build_args = (
     'Apocalypse <APOCAL@cpan.org>'
   ],
   'dist_name' => 'POE-Component-IRC-Plugin-Karma',
-  'dist_version' => '0.001',
+  'dist_version' => '0.002',
   'license' => 'perl',
   'module_name' => 'POE::Component::IRC::Plugin::Karma',
   'recommends' => {},

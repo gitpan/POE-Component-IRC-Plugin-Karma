@@ -1,5 +1,11 @@
 Revision history for Perl module POE-Component-IRC-Plugin-Karma
 
+0.002
+	Released: 2011-04-02 22:59:11 UTC
+
+	Add 'casesens' option to control case-sensitive searching
+	Tweak some sqlite pragma for performance
+
 0.001
 	Released: 2011-04-02 18:56:02 UTC
 

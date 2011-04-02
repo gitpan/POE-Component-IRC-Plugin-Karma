@@ -24,7 +24,7 @@ no_index:
 provides:
   POE::Component::IRC::Plugin::Karma:
     file: lib/POE/Component/IRC/Plugin/Karma.pm
-    version: 0.001
+    version: 0.002
 requires:
   DBD::SQLite: 0
   DBI: 0
@@ -37,7 +37,7 @@ resources:
   homepage: http://search.cpan.org/dist/POE-Component-IRC-Plugin-Karma/
   license: http://dev.perl.org/licenses/
   repository: git://github.com/apocalypse/perl-pocoirc-karma.git
-version: 0.001
+version: 0.002
 x_BuiltWith:
   modules:
     DBD::SQLite: 1.31
