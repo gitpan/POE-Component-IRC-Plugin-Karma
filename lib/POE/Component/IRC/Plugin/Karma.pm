@@ -9,7 +9,7 @@
 use strict; use warnings;
 package POE::Component::IRC::Plugin::Karma;
 BEGIN {
-  $POE::Component::IRC::Plugin::Karma::VERSION = '0.002';
+  $POE::Component::IRC::Plugin::Karma::VERSION = '0.003';
 }
 BEGIN {
   $POE::Component::IRC::Plugin::Karma::AUTHORITY = 'cpan:APOCAL';
@@ -34,11 +34,30 @@ use POE::Component::IRC::Common qw( parse_user );
 # TODO do we need a botsnack thingy? bot++ bot--
 # seen in bot-basicbot-karma where a user tries to karma the bot itself and it replies with something
 
-# TODO <@Hinrik> maybe you should separate the parsing from the IRC plugin
+# TODO
+# <@Hinrik> maybe you should separate the parsing from the IRC plugin
 # <@Hinrik> so there'd be a Karma module which people could apply to any text (e.g. IRC logs)
 # <@Hinrik> and also for people like buu who use an entirely different kind of IRC plugin
 
 # TODO do we need a warn_selfkarma option so it warns the user trying to karma themselves?
+
+# TODO
+#<Getty> explain duckduckgo
+#<Getty> explain karma duckduckgo
+#<Getty> ah not implemented, ok
+
+# TODO
+#<Apocalypse> Hinrik: I was wondering - in my karma stuff I use lc( $nick ) to compare it for selfkarma
+#<Apocalypse> Should I use the l_irc thingy? What reason does it exist for? :)
+#<@Hinrik> because according to RFC1459, "foo{" if the lowercase version of and "FOO["
+#<Apocalypse> parse fail - what did you meant to say? foo{ is the uc equivalent of FOO[ ?
+#<@Hinrik> l_irc("FOO[") == "foo{"
+#<@Hinrik> not all servers use the rfc1459 casemapping though, which is why it's safest to call the function with a casemapping parameter, which you can get via $irc->isupport('CASEMAPPING');
+#<Apocalypse> why is the irc protocol that insane? ;)
+#<@Hinrik> RFC1459 says that this particular insanity is due to the Finnish keyboard layout, I believe
+#<Apocalypse> haha
+#<@Hinrik> where shift+{ gives you [ or something
+#<Apocalypse> alright thanks for the info, I'll attack it later and see what happens :)
 
 
 has 'addressed' => (
@@ -211,7 +230,7 @@ sub _karma {
 	} else {
 		# get the list of karma matches
 		# TODO still needs a bit more work, see t/parsing.t
-		my @matches = ( $args{'str'} =~ /(\([^\)]+\)|\w+)(\+\+|--)\s*(\#.+)?/g );
+		my @matches = ( $args{'str'} =~ /(\([^\)]+\)|\S+)(\+\+|--)\s*(\#.+)?/g );
 		if ( @matches ) {
 			my @replies;
 			while ( my( $karma, $op, $comment ) = splice( @matches, 0, 3 ) ) {
@@ -365,7 +384,7 @@ __END__
 =pod
 
 =for :stopwords Apocalypse cpan testmatrix url annocpan anno bugtracker rt cpants kwalitee
-diff irc mailto metadata placeholders
+diff irc mailto metadata placeholders karma
 
 =encoding utf-8
 
@@ -377,7 +396,7 @@ POE::Component::IRC::Plugin::Karma - A POE::Component::IRC plugin that keeps tra
 
 =head1 VERSION
 
-  This document describes v0.002 of POE::Component::IRC::Plugin::Karma - released April 02, 2011 as part of POE-Component-IRC-Plugin-Karma.
+  This document describes v0.003 of POE::Component::IRC::Plugin::Karma - released April 15, 2011 as part of POE-Component-IRC-Plugin-Karma.
 
 =head1 SYNOPSIS
 

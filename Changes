@@ -1,5 +1,10 @@
 Revision history for Perl module POE-Component-IRC-Plugin-Karma
 
+0.003
+	Released: 2011-04-16 01:32:53 UTC
+
+	Fix a regex bug where it wouldn't recognize some karma commands ( thanks GETTY )
+
 0.002
 	Released: 2011-04-02 22:59:11 UTC
 

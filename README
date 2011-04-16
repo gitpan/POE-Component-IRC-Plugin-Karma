@@ -3,7 +3,7 @@ NAME
     keeps track of karma
 
 VERSION
-      This document describes v0.002 of POE::Component::IRC::Plugin::Karma - released April 02, 2011 as part of POE-Component-IRC-Plugin-Karma.
+      This document describes v0.003 of POE::Component::IRC::Plugin::Karma - released April 15, 2011 as part of POE-Component-IRC-Plugin-Karma.
 
 SYNOPSIS
             # A simple bot to showcase karma capabilities
